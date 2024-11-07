@@ -37,12 +37,45 @@ def instructions():
     ----------------------------------------------
                       INSTRUCTIONS
     ----------------------------------------------
-    1. Select 'Encrypt a message' to encrypt a text
-    2. Select 'Decrypt a message' to decrypt a text
-    3. Follow the prompts to enter your message
-    4. Choose your encryption/decryption method
-    5. Compare results or edit your message
+        **Caesar Cipher**
+    The Caesar Cipher is a simple encryption technique where each letter in the message 
+    is shifted by a specified number of positions in the alphabet.
+    
+    For example, if the shift (key) is 3:
+      - A becomes D
+      - B becomes E
+      - C becomes F
+
+       **Vigenère Cipher**
+    The Vigenère Cipher is a more complex encryption method that uses a keyword to shift letters. 
+    Instead of a single shift for the entire message, each letter in the message is shifted based 
+    on the corresponding letter in the keyword.
+    
+    For example, with the keyword "KEY":
+      - The first letter of the message is shifted by the position of 'K', the second by 'E', 
+        and the third by 'Y'.
+      - This pattern repeats for longer messages, cycling through the keyword.
+
+
+    **How the Application Works**
+    This application allows you to encrypt and decrypt messages using the Caesar and Vigenère ciphers.
+    Follow these steps to use the app:
+      1. Choose an option from the main menu:
+         - Encrypt a message
+         - Decrypt a message
+         - View instructions
+         - Exit the application
+      2. For encryption or decryption:
+         - Select your preferred cipher method (Caesar or Vigenère).
+         - Enter the
+          message you want to encrypt or decrypt.
+         - Provide the required key (shift for Caesar or keyword for Vigenère).
+      3. After encryption or decryption:
+         - You can view the result.
+         - Choose additional options to compare results, edit the message, or return to the main menu.
+
     ----------------------------------------------
+
     Press Enter to return to the main menu...
     """)
     input()
@@ -55,14 +88,33 @@ def encryption_menu():
     1. Caesar Cipher
     2. Vigenère Cipher
     3. Return to main menu
+
+
+
+
+          **Caesar Cipher**
+    The Caesar Cipher is a simple encryption technique where each letter in the message 
+    is shifted by a specified number of positions in the alphabet.
+    
+    For example, if the shift (key) is 3:
+      - A becomes D
+      - B becomes E
+      - C becomes F
+
+       **Vigenère Cipher**
+    The Vigenère Cipher is a more complex encryption method that uses a keyword to shift letters. 
+    Instead of a single shift for the entire message, each letter in the message is shifted based 
+    on the corresponding letter in the keyword.
+    
+    For example, with the keyword "KEY":
+      - The first letter of the message is shifted by the position of 'K', the second by 'E', 
+        and the third by 'Y'.
+      - This pattern repeats for longer messages, cycling through the keyword.
     ----------------------------------------------
     """)
     choice = input("Please select an encryption method: ")
     return choice
-def main():
-    while True:
-        welcome()
-        choice = main_menu()
+
 
 def decryption_menu():
     print("""
@@ -72,6 +124,30 @@ def decryption_menu():
     1. Caesar Cipher
     2. Vigenère Cipher
     3. Return to main menu
+
+
+
+
+
+
+          **Caesar Cipher**
+    The Caesar Cipher is a simple encryption technique where each letter in the message 
+    is shifted by a specified number of positions in the alphabet.
+    
+    For example, if the shift (key) is 3:
+      - A becomes D
+      - B becomes E
+      - C becomes F
+
+       **Vigenère Cipher**
+    The Vigenère Cipher is a more complex encryption method that uses a keyword to shift letters. 
+    Instead of a single shift for the entire message, each letter in the message is shifted based 
+    on the corresponding letter in the keyword.
+    
+    For example, with the keyword "KEY":
+      - The first letter of the message is shifted by the position of 'K', the second by 'E', 
+        and the third by 'Y'.
+      - This pattern repeats for longer messages, cycling through the keyword.
     ----------------------------------------------
     """)
     choice = input("Please select a decryption method: ")
@@ -92,17 +168,26 @@ def get_key_caesar():
                     ENTER KEY
     ----------------------------------------------
     """)
-        caesar_key = input("Please enter key, an integer from 1-25: ")
-        caesar_key = int(caesar_key)
-        return caesar_key
+        caesar_key = input("Please enter a key, an integer from 1-25: ")
+        try:
+            caesar_key = int(caesar_key)
+            if 1 <= caesar_key <= 25:
+                return caesar_key  # Valid key, exit the loop
+            else:
+                print("Error: The key must be an integer between 1 and 25.")
+        except ValueError:
+            print("Error: Please enter a valid integer.")
 def get_key_vigenere():
         print("""
     ----------------------------------------------
                     ENTER KEY
     ----------------------------------------------
     """)
-        vigenere_key = input("Please enter key a word or characters at least 2 character long: ")
-        return vigenere_key
+        vigenere_key = input("Please enter a key, a word or characters with at least 2 alphabetic characters: ")
+        if vigenere_key.isalpha() and len(vigenere_key) >= 2:
+            return vigenere_key  
+        else:
+            print("Error: The key must be at least 2 alphabetic characters long.")
 
 
 
@@ -182,6 +267,47 @@ def encryption_loop():
                     result = vigenere_encrypt(message, key)
             elif choice == '3':
                 return
+
+
+def decryption_loop():
+    choice = decryption_menu()  
+    
+    while True:
+        if choice == '1':
+            message = get_message()
+            encryption = 'Caesar Cipher'
+            key = get_key_caesar()
+            result = caesar_decrypt(message, key)
+        elif choice == '2':
+            message = get_message()
+            encryption = 'Vigenère Cipher'
+            key = get_key_vigenere()
+            result = vigenere_decrypt(message, key)
+        elif choice == '3':
+            return  
+        else: 
+            print('Invalid input. Returning to main menu.')
+            return
+        
+        # Decryption result loop
+        while True:
+            choice = results_menu_decryption(result, key, encryption)
+            if choice == '1':  
+                message = edit_message(message)
+                
+                if encryption == 'Caesar Cipher':
+                    result = caesar_decrypt(message, key)
+                elif encryption == 'Vigenère Cipher':
+                    result = vigenere_decrypt(message, key)
+            elif choice == '2':  
+                return
+            else:
+                print("Invalid option. Please try again.")
+
+
+
+
+
 def comparision(message,key,type):
     if type == 'Caesar Cipher':
         result = caesar_encrypt(message, key)
@@ -202,6 +328,8 @@ def comparision(message,key,type):
     2. {other_encryption_type}: {message} -> {new_key}: {other_result}
     ----------------------------------------------
     """)
+
+
 def results_menu_encryption(results, key,type):
         print(f"""
     ----------------------------------------------
@@ -213,11 +341,30 @@ def results_menu_encryption(results, key,type):
     ----------------------------------------------
     1. Compare results with other encryption methods
     2. Edit the message or enter new message
-    3. Return to main menu
+    3. Return to main menu (Warning: Message will be lost forever)
     ----------------------------------------------
     """)
         choice = input("Please select an option: ")
         return choice
+
+
+def results_menu_decryption(results, key, encryption_type):
+    print(f"""
+    ----------------------------------------------
+                      Results
+    ----------------------------------------------
+    Decrypted Result: {encryption_type} (key = {key}): {results}
+    ----------------------------------------------
+                      OPTIONS
+    ----------------------------------------------
+    1. Edit the message or enter new message
+    2. Return to main menu (Warning: Message will be lost forever)
+    ----------------------------------------------
+    """)
+    choice = input("Please select an option: ")
+    return choice
+
+
 def edit_message(current_message):
     print(f"Current message: {current_message}")
     new_message = input("Press Enter to keep the current message or enter a new message: ")
@@ -237,7 +384,7 @@ def main():
         if choice == '1':  # Encrypt a message
             encryption_loop()
         elif choice == '2':  # Decrypt a message
-            handle_decryption()
+            decryption_loop()
         elif choice == '3':  # View Instructions
             instructions()
         elif choice == '4':  # Exit
