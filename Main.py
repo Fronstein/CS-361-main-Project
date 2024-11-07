@@ -205,7 +205,7 @@ def caesar_encrypt(message, key):
 def caesar_decrypt(message, key):
     return caesar_encrypt(message, -key)
 
-# Vigenère Cipher Functions
+#Logic of this algorithm is taken from https://www.geeksforgeeks.org/vigenere-cipher/
 def vigenere_encrypt(message, key):
     encrypted_message = ""
     key_index = 0
@@ -221,6 +221,8 @@ def vigenere_encrypt(message, key):
             encrypted_message += char
     return encrypted_message
 
+    
+#Logic of this algorithm is taken from https://www.geeksforgeeks.org/vigenere-cipher/
 def vigenere_decrypt(message, key):
     decrypted_message = ""
     key_index = 0
